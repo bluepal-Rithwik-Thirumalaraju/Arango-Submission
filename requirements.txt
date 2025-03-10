@@ -1,0 +1,12 @@
+arango
+langchain
+langchain-community
+langchain-groq
+networkx
+flask
+
+langchain-core
+networkx
+matplotlib
+plotly
+groq

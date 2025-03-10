@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ArangoDB Interface</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            display: flex;
+        }
+
+        .sidebar {
+            width: 250px;
+            background: #2c3e50;
+            color: white;
+            height: 100vh;
+            padding-top: 20px;
+            position: fixed;
+        }
+
+        .sidebar a {
+            display: block;
+            padding: 15px;
+            color: white;
+            text-decoration: none;
+            font-size: 18px;
+            transition: 0.3s;
+        }
+
+        .sidebar a:hover {
+            background: #1a252f;
+        }
+
+        .main-content {
+            margin-left: 260px;
+            padding: 20px;
+            width: calc(100% - 260px);
+        }
+
+        .container {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+
+        h2 {
+            text-align: center;
+            color: #333;
+        }
+
+        label {
+            font-weight: bold;
+            display: block;
+            margin-top: 10px;
+        }
+
+        textarea, input[type="submit"] {
+            width: 100%;
+            padding: 10px;
+            margin-top: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        input[type="submit"] {
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #0056b3;
+        }
+
+        .result, .visualization {
+            margin-top: 20px;
+            padding: 10px;
+            background: #eef;
+            border-radius: 5px;
+        }
+
+        img {
+            width: 100%;
+            height: auto;
+            border-radius: 5px;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .image-gallery {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .image-gallery img {
+            width: 100%;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Sidebar Navigation -->
+    <div class="sidebar">
+        <a href="#" onclick="showSection('home')">🏠 Homepage</a>
+        <a href="#" onclick="showSection('info')">ℹ️ Info</a>
+        <a href="#" onclick="showSection('query')">🔍 User Query</a>
+        <a href="#" onclick="showSection('visualize')">📊 Visualize</a>
+    </div>
+
+    <!-- Main Content Area -->
+    <div class="main-content">
+        
+        <!-- Homepage Section -->
+        <div id="home" class="container">
+            <h2>Database Overview</h2>
+            <p>Welcome to the Patient-Disease Relationship Interface! This tool allows you to explore and analyze relationships between patients and diseases stored        in the ArangoDB database. 
+               You can execute queries, visualize data, and gain insights into patient diagnoses and shared diseases.</p>
+            <p><strong>Key Features:</strong></p>
+            <ul>
+                <li><strong>Patient Data:</strong> Detailed records of 550 patients, including name, age, gender, and blood type.</li>
+                <li><strong>Disease Data:</strong> Information on 35 diseases, including names and prescribed medications.</li>
+                <li><strong>Diagnosis Relationships:</strong> Graph-based connections between patients and diseases, showing diagnoses and shared conditions.</li>
+                <li><strong>Interactive Visualizations:</strong> Visualize patient-disease relationships and shared conditions using network graphs.</li>
+                <li><strong>Natural Language Queries:</strong> Use natural language to query the database and retrieve results in an easy-to-understand format.</li>
+            </ul>
+            <p>Get started by exploring the data or running a query to uncover insights!</p>
+        </div>
+
+        <!-- Info Section (Displays 4 Images) -->
+        <div id="info" class="container hidden">
+            <h2>Database Images</h2>
+            <div class="image-gallery">
+                <img src="{{ url_for('static', filename='plot1.png') }}" alt="Image 1">
+                <img src="{{ url_for('static', filename='plot2.png') }}" alt="Image 2">
+                <img src="{{ url_for('static', filename='plot3.png') }}" alt="Image 3">
+                <img src="{{ url_for('static', filename='plot4.png') }}" alt="Image 4">
+            </div>
+        </div>
+
+        <!-- Query Section (User Query Input) -->
+        <div id="query" class="container hidden">
+            <h2>User Query</h2>
+            <form action="/query" method="POST">
+                <label for="query">Enter your text query:</label>
+                <textarea id="query" name="query" rows="3" required></textarea>
+                <input type="submit" value="Submit Query">
+            </form>
+            
+            {% if result %}
+            <div class="result">
+                <h3>Query Result:</h3>
+                <pre>{{ result }}</pre>
+            </div>
+            {% endif %}
+        </div>
+
+        <!-- Visualization Section (Graph Query Input) -->
+        <div id="visualize" class="container hidden">
+            <h2>Graph Visualization</h2>
+            <form action="/visualize" method="POST">
+                <label for="visualize_query">Enter your visualization query:</label>
+                <textarea id="visualize_query" name="query" rows="3" required></textarea>
+                <input type="submit" value="Generate Visualization">
+            </form>
+            
+            {% if plot %}
+            <div class="visualization">
+                <h3>Graph Output:</h3>
+                <img src="{{ url_for('static', filename='plot.png') }}" alt="Graph Visualization">
+            </div>
+            {% endif %}
+        </div>
+
+    </div>
+
+    <script>
+        function showSection(section) {
+            document.getElementById("home").classList.add("hidden");
+            document.getElementById("info").classList.add("hidden");
+            document.getElementById("query").classList.add("hidden");
+            document.getElementById("visualize").classList.add("hidden");
+
+            document.getElementById(section).classList.remove("hidden");
+        }
+    </script>
+
+</body>
+</html>
